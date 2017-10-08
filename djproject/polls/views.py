@@ -8,9 +8,11 @@ from django.utils import timezone
 
 # Create your views here.
 from django.http import HttpResponseRedirect, HttpResponse
+from django.http import JsonResponse
 from django.template import loader
 from .models import Choice, Question
 from django.http import Http404
+from django.core import serializers
 
 #def index(request):
 #    latest_question_list = Question.objects.order_by('-pub_date')[:5]
@@ -66,3 +68,7 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+def questions_json(request):
+    latest_question_list = serializers.serialize('json', Question.objects.all())
+    return HttpResponse(latest_question_list, content_type='json')
